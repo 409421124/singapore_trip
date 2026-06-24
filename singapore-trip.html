@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>晴天・新加坡 🌤️</title>
+<style>
+  :root {
+    --c-bg: #FAFAF8;
+    --c-surface: #FFFFFF;
+    --c-border: rgba(0,0,0,0.08);
+    --c-border-strong: rgba(0,0,0,0.15);
+    --c-text: #1A1A18;
+    --c-text-sub: #6B6B68;
+    --c-text-hint: #A0A09D;
+    --c-red: #D8503F;
+    --c-red-bg: #FBEEEB;
+    --c-green: #3B6D11;
+    --c-green-bg: #EAF3DE;
+    --c-amber: #BA7517;
+    --c-amber-bg: #FAEEDA;
+    --c-blue: #185FA5;
+    --c-blue-bg: #E6F1FB;
+    --c-purple: #534AB7;
+    --c-purple-bg: #EEEDFE;
+    --c-teal: #0F6E56;
+    --c-teal-bg: #E1F5EE;
+    --c-coral: #993C1D;
+    --c-coral-bg: #FAECE7;
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+    --nav-h: 64px;
+    --tab-h: 60px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --c-bg: #141412;
+      --c-surface: #1E1E1C;
+      --c-border: rgba(255,255,255,0.08);
+      --c-border-strong: rgba(255,255,255,0.15);
+      --c-text: #F0EFE8;
+      --c-text-sub: #9B9B96;
+      --c-text-hint: #6B6B68;
+      --c-red: #F0997B;
+      --c-red-bg: #4A1B0C;
+      --c-green: #C0DD97;
+      --c-green-bg: #173404;
+      --c-amber: #FAC775;
+      --c-amber-bg: #412402;
+      --c-blue: #85B7EB;
+      --c-blue-bg: #042C53;
+      --c-purple: #AFA9EC;
+      --c-purple-bg: #26215C;
+      --c-teal: #5DCAA5;
+      --c-teal-bg: #04342C;
+      --c-coral: #F0997B;
+      --c-coral-bg: #4A1B0C;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Noto Sans TC', sans-serif;
+    background: var(--c-bg);
+    color: var(--c-text);
+    font-size: 15px;
+    line-height: 1.6;
+    max-width: 430px;
+    margin: 0 auto;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+  /* Top nav */
+  .top-nav {
+    position: sticky; top: 0; z-index: 100;
+    border-bottom: 0.5px solid var(--c-border);
+    padding: 0 20px;
+    height: var(--nav-h);
+    display: flex; align-items: center; justify-content: space-between;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.88);
+  }
+  @media (prefers-color-scheme: dark) {
+    .top-nav { background: rgba(30,30,28,0.88); }
+  }
+  .top-nav .logo { font-size: 17px; font-weight: 600; letter-spacing: -0.3px; }
+  .top-nav .logo span { color: var(--c-red); }
+  .top-nav .date-badge {
+    font-size: 12px; color: var(--c-text-sub);
+    background: var(--c-bg);
+    border: 0.5px solid var(--c-border);
+    border-radius: 20px;
+    padding: 4px 10px;
+  }
+  .top-nav.hidden { display: none; }
+
+  /* Bottom tab bar */
+  .tab-bar {
+    position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 100%; max-width: 430px;
+    border-top: 0.5px solid var(--c-border);
+    display: flex;
+    height: var(--tab-h);
+    z-index: 100;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(255,255,255,0.92);
+  }
+  @media (prefers-color-scheme: dark) {
+    .tab-bar { background: rgba(30,30,28,0.92); }
+  }
+  .tab-item {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px;
+    cursor: pointer; border: none; background: none;
+    color: var(--c-text-hint); font-size: 10px;
+    transition: color 0.2s;
+    padding: 8px 0;
+  }
+  .tab-item.active { color: var(--c-red); }
+  .tab-item svg { width: 22px; height: 22px; stroke-width: 1.5; fill: none; stroke: currentColor; }
+
+  /* Pages */
+  .pages { padding-bottom: calc(var(--tab-h) + env(safe-area-inset-bottom, 0) + 20px); }
+  .page { display: none; padding: 20px; }
+  .page.active { display: block; }
+  .page.cover-page { padding: 0; }
+
+  /* ===== Page 0: Cover ===== */
+  .cover {
+    position: relative;
+    min-height: 100dvh;
+    background: linear-gradient(165deg, #0a1428 0%, #16243f 38%, #1f3a5c 68%, #2d5a7a 100%);
+    display: flex; flex-direction: column;
+    overflow: hidden;
+    padding-bottom: calc(var(--tab-h) + 20px);
+  }
+  /* sky clouds */
+  .cover-clouds {
+    position: absolute; inset: 0; pointer-events: none; opacity: 0.5;
+  }
+  .cloud {
+    position: absolute; background: rgba(255,255,255,0.08);
+    border-radius: 100px; filter: blur(8px);
+  }
+  .cloud.c1 { width: 180px; height: 50px; top: 12%; left: -40px; animation: drift 28s linear infinite; }
+  .cloud.c2 { width: 130px; height: 38px; top: 26%; right: -30px; animation: drift2 34s linear infinite; }
+  .cloud.c3 { width: 150px; height: 44px; top: 44%; left: -50px; animation: drift 40s linear infinite; }
+  @keyframes drift { from { transform: translateX(0); } to { transform: translateX(520px); } }
+  @keyframes drift2 { from { transform: translateX(0); } to { transform: translateX(-520px); } }
+  /* rain that turns to shine */
+  .cover-sun {
+    position: absolute; top: 8%; right: 10%;
+    width: 90px; height: 90px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,224,150,0.95) 0%, rgba(255,200,90,0.5) 50%, transparent 72%);
+    filter: blur(2px);
+    animation: pulse 5s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.85; transform: scale(1);} 50% { opacity: 1; transform: scale(1.08);} }
+
+  .cover-top {
+    position: relative; z-index: 2;
+    padding: 56px 28px 0; text-align: center;
+  }
+  .cover-tour-label {
+    font-size: 11px; letter-spacing: 5px; color: rgba(255,255,255,0.6);
+    font-weight: 500; margin-bottom: 6px;
+  }
+  .cover-carnival {
+    font-size: 13px; letter-spacing: 8px; color: rgba(180,220,255,0.85);
+    font-weight: 600; margin-bottom: 26px;
+  }
+  .cover-title {
+    font-size: 52px; font-weight: 800; line-height: 1.05;
+    background: linear-gradient(180deg, #ffffff 0%, #b8e0ff 55%, #6db5e8 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 4px;
+    text-shadow: 0 0 40px rgba(120,190,255,0.3);
+    margin-bottom: 4px;
+  }
+  .cover-subtitle-cn {
+    font-size: 22px; font-weight: 600; color: rgba(200,230,255,0.9);
+    letter-spacing: 6px; margin-bottom: 30px;
+  }
+
+  /* center hero - merlion + skyline silhouette */
+  .cover-hero {
+    position: relative; z-index: 2; flex: 1;
+    display: flex; align-items: flex-end; justify-content: center;
+    padding: 0 20px;
+    min-height: 220px;
+  }
+  .cover-skyline { width: 100%; max-width: 360px; display: block; }
+
+  .cover-info {
+    position: relative; z-index: 3;
+    margin: 0 20px;
+    background: rgba(255,255,255,0.07);
+    border: 0.5px solid rgba(255,255,255,0.18);
+    border-radius: var(--radius-lg);
+    backdrop-filter: blur(10px);
+    padding: 18px 20px;
+    margin-top: 12px;
+  }
+  .cover-info-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+  .cover-info-row .ci-label { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .cover-info-row .ci-val { font-size: 14px; color: #fff; font-weight: 600; }
+  .cover-info-row .ci-val.gold { color: #FFD479; }
+  .cover-divider { height: 0.5px; background: rgba(255,255,255,0.12); margin: 4px 0; }
+
+  .cover-cta {
+    position: relative; z-index: 3;
+    margin: 16px 20px 0;
+    display: flex; gap: 10px;
+  }
+  .cover-btn {
+    flex: 1; text-align: center; cursor: pointer;
+    border-radius: var(--radius-md); padding: 13px;
+    font-size: 14px; font-weight: 600; border: none;
+  }
+  .cover-btn.primary { background: linear-gradient(135deg,#FFD479,#F0A93F); color: #3a2400; }
+  .cover-btn.ghost { background: rgba(255,255,255,0.1); color: #fff; border: 0.5px solid rgba(255,255,255,0.25); }
+  .cover-hint { position: relative; z-index:3; text-align:center; font-size:11px; color:rgba(255,255,255,0.45); margin-top:18px; }
+
+  /* Section heading */
+  .section-title {
+    font-size: 11px; font-weight: 600; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--c-text-hint);
+    margin: 28px 0 12px;
+  }
+  .section-title:first-child { margin-top: 4px; }
+
+  /* Flight card */
+  .flight-card {
+    background: var(--c-surface);
+    border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .flight-header {
+    padding: 14px 16px;
+    border-bottom: 0.5px solid var(--c-border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .flight-header .icon {
+    width: 32px; height: 32px;
+    background: var(--c-blue-bg);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .flight-header h3 { font-size: 14px; font-weight: 600; }
+  .flight-header p { font-size: 12px; color: var(--c-text-sub); }
+  .flight-route {
+    padding: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .route-point { text-align: center; }
+  .route-point .code { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .route-point .label { font-size: 11px; color: var(--c-text-sub); }
+  .route-arrow {
+    display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; padding: 0 12px;
+  }
+  .route-line {
+    width: 100%; height: 0.5px; background: var(--c-border-strong);
+    position: relative; display: flex; align-items: center; justify-content: center;
+  }
+  .route-line::after { content: '✈'; font-size: 14px; position: absolute; }
+  .route-duration { font-size: 11px; color: var(--c-text-sub); margin-top: 2px; }
+  .info-rows { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; }
+  .info-row .key { font-size: 12px; color: var(--c-text-sub); }
+  .info-row .val { font-size: 12px; font-weight: 500; }
+
+  /* Notice cards */
+  .notice-card {
+    background: var(--c-surface);
+    border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .notice-card .notice-header {
+    display: flex; align-items: center; gap: 8px; margin-bottom: 10px;
+  }
+  .notice-card .notice-icon {
+    width: 28px; height: 28px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+    flex-shrink: 0;
+  }
+  .notice-card h4 { font-size: 13px; font-weight: 600; }
+  .notice-items { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .notice-items li { font-size: 13px; color: var(--c-text-sub); padding-left: 16px; position: relative; }
+  .notice-items li::before { content: '·'; position: absolute; left: 4px; }
+  .tag {
+    display: inline-block; font-size: 11px; font-weight: 600;
+    border-radius: 6px; padding: 2px 7px; margin: 1px 2px;
+  }
+  .tag-red { background: var(--c-red-bg); color: var(--c-red); }
+  .tag-amber { background: var(--c-amber-bg); color: var(--c-amber); }
+  .tag-green { background: var(--c-green-bg); color: var(--c-green); }
+  .tag-blue { background: var(--c-blue-bg); color: var(--c-blue); }
+  .tag-purple { background: var(--c-purple-bg); color: var(--c-purple); }
+  .tag-teal { background: var(--c-teal-bg); color: var(--c-teal); }
+  .tag-coral { background: var(--c-coral-bg); color: var(--c-coral); }
+
+  /* Checklist */
+  .checklist-section {
+    background: var(--c-surface);
+    border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 12px;
+  }
+  .checklist-title {
+    padding: 12px 16px; border-bottom: 0.5px solid var(--c-border);
+    font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 8px;
+  }
+  .checklist-icon { font-size: 15px; }
+  .check-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px; border-bottom: 0.5px solid var(--c-border);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .check-item:last-child { border-bottom: none; }
+  .check-item:hover { background: var(--c-bg); }
+  .check-box {
+    width: 20px; height: 20px; border: 1.5px solid var(--c-border-strong);
+    border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .check-box.checked { background: var(--c-red); border-color: var(--c-red); }
+  .check-box.checked::after { content: '✓'; color: white; font-size: 12px; font-weight: 700; }
+  .check-label { font-size: 14px; flex: 1; outline: none; background: none; border: none; color: var(--c-text); }
+  .check-item.done .check-label { text-decoration: line-through; color: var(--c-text-hint); }
+  .add-item-row {
+    padding: 12px 16px; display: flex; gap: 8px; border-top: 0.5px solid var(--c-border);
+  }
+  .add-input {
+    flex: 1; font-size: 14px; border: none; background: var(--c-bg);
+    border-radius: var(--radius-sm); padding: 8px 12px; color: var(--c-text);
+    outline: none;
+  }
+  .add-btn {
+    background: var(--c-red); color: white; border: none;
+    border-radius: var(--radius-sm); padding: 8px 14px; font-size: 13px; font-weight: 600; cursor: pointer;
+  }
+
+  /* Day cards */
+  .day-card {
+    background: var(--c-surface);
+    border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .day-header {
+    padding: 16px 18px; background: var(--c-red);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .day-header.concert { background: linear-gradient(135deg,#1f3a5c,#2d5a7a); }
+  .day-header .day-num { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
+  .day-header .day-title { font-size: 16px; font-weight: 700; color: white; margin-top: 1px; }
+  .day-header .day-cost { font-size: 13px; color: rgba(255,255,255,0.9); font-weight: 500; }
+  .timeline { padding: 4px 0; }
+  .t-item {
+    display: flex; gap: 12px; padding: 12px 18px;
+    border-bottom: 0.5px solid var(--c-border); position: relative;
+  }
+  .t-item:last-child { border-bottom: none; }
+  .t-left { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 44px; flex-shrink: 0; }
+  .t-time { font-size: 11px; color: var(--c-text-hint); font-weight: 500; }
+  .t-icon {
+    width: 32px; height: 32px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+    flex-shrink: 0;
+  }
+  .t-icon.spot { background: var(--c-blue-bg); }
+  .t-icon.food { background: var(--c-amber-bg); }
+  .t-icon.transit { background: var(--c-teal-bg); }
+  .t-icon.hotel { background: var(--c-purple-bg); }
+  .t-icon.star { background: var(--c-purple-bg); }
+  .t-content { flex: 1; min-width: 0; }
+  .t-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .t-desc { font-size: 12px; color: var(--c-text-sub); margin-bottom: 6px; line-height: 1.5; }
+  .t-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 6px; }
+  .nav-btn {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 12px; color: var(--c-blue); font-weight: 500;
+    background: var(--c-blue-bg); border: none;
+    border-radius: 20px; padding: 5px 10px; cursor: pointer;
+    text-decoration: none; margin-top: 4px;
+  }
+  .nav-btn svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+  /* Food list */
+  .food-filter {
+    display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 16px;
+    scrollbar-width: none;
+  }
+  .food-filter::-webkit-scrollbar { display: none; }
+  .filter-btn {
+    flex-shrink: 0; font-size: 12px; font-weight: 500;
+    border-radius: 20px; padding: 6px 14px; cursor: pointer;
+    border: 0.5px solid var(--c-border-strong); background: var(--c-surface);
+    color: var(--c-text-sub); transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .filter-btn.active { background: var(--c-red); color: white; border-color: var(--c-red); }
+  .food-item {
+    background: var(--c-surface);
+    border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-md);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex; align-items: flex-start; gap: 12px;
+  }
+  .food-emoji { font-size: 28px; flex-shrink: 0; line-height: 1; margin-top: 2px; }
+  .food-info { flex: 1; min-width: 0; }
+  .food-name { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .food-meta { font-size: 12px; color: var(--c-text-sub); display: flex; gap: 8px; flex-wrap: wrap; }
+  .food-price { color: var(--c-amber); font-weight: 600; }
+  .food-area { color: var(--c-text-hint); }
+  .food-note { font-size: 12px; color: var(--c-text-sub); margin-top: 5px; }
+
+  /* Tips */
+  .tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .tip-card {
+    background: var(--c-surface); border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-md); padding: 14px;
+  }
+  .tip-card .tip-icon { font-size: 22px; margin-bottom: 8px; }
+  .tip-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 4px; }
+  .tip-card p { font-size: 11px; color: var(--c-text-sub); line-height: 1.5; }
+  .phrase-card {
+    background: var(--c-surface); border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-md); padding: 14px 16px;
+    margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center;
+  }
+  .phrase-card .jp { font-size: 15px; font-weight: 600; }
+  .phrase-card .tw { font-size: 12px; color: var(--c-text-sub); }
+  .phrase-card .rom { font-size: 11px; color: var(--c-text-hint); margin-top: 1px; }
+
+  /* Budget */
+  .budget-bar {
+    background: var(--c-surface); border: 0.5px solid var(--c-border);
+    border-radius: var(--radius-lg); padding: 16px; margin-bottom: 12px;
+  }
+  .budget-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .budget-label { font-size: 13px; color: var(--c-text-sub); }
+  .budget-val { font-size: 13px; font-weight: 600; }
+  .budget-track { height: 4px; background: var(--c-border); border-radius: 2px; margin-top: 4px; }
+  .budget-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+  .total-card {
+    background: var(--c-red); border-radius: var(--radius-lg);
+    padding: 20px; color: white; text-align: center; margin-bottom: 16px;
+  }
+  .total-card .total-label { font-size: 13px; opacity: 0.8; margin-bottom: 4px; }
+  .total-card .total-num { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; }
+  .total-card .total-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+</style>
+</head>
+<body>
+<h1 class="sr-only">晴天・新加坡 五日之旅 旅遊規劃 App</h1>
+
+<!-- Top nav -->
+<div class="top-nav" id="top-nav">
+  <div class="logo">晴天<span>・新加坡</span> 🌤️</div>
+  <div class="date-badge">5天4夜</div>
+</div>
+
+<!-- Pages -->
+<div class="pages">
+
+  <!-- Page 0: Cover -->
+  <div class="page cover-page active" id="page-cover">
+    <div class="cover">
+      <div class="cover-clouds">
+        <div class="cloud c1"></div>
+        <div class="cloud c2"></div>
+        <div class="cloud c3"></div>
+      </div>
+      <div class="cover-sun"></div>
+
+      <div class="cover-top">
+        <div class="cover-tour-label">CARNIVAL Ⅱ WORLD TOUR</div>
+        <div class="cover-carnival">嘉 年 華 Ⅱ</div>
+        <div class="cover-title">晴天</div>
+        <div class="cover-subtitle-cn">新 加 坡</div>
+      </div>
+
+      <div class="cover-hero">
+        <svg class="cover-skyline" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="新加坡天際線剪影">
+          <!-- Marina Bay Sands -->
+          <rect x="60" y="120" width="14" height="80" fill="rgba(255,255,255,0.18)"/>
+          <rect x="96" y="110" width="14" height="90" fill="rgba(255,255,255,0.18)"/>
+          <rect x="132" y="118" width="14" height="82" fill="rgba(255,255,255,0.18)"/>
+          <path d="M50 110 Q103 88 156 110 L156 116 Q103 96 50 116 Z" fill="rgba(180,220,255,0.5)"/>
+          <ellipse cx="103" cy="104" rx="58" ry="7" fill="rgba(180,220,255,0.35)"/>
+          <!-- boat detail on top -->
+          <rect x="70" y="98" width="3" height="8" fill="rgba(255,255,255,0.25)"/>
+          <rect x="103" y="96" width="3" height="9" fill="rgba(255,255,255,0.25)"/>
+          <rect x="135" y="98" width="3" height="8" fill="rgba(255,255,255,0.25)"/>
+          <!-- Merlion -->
+          <g transform="translate(196,128)">
+            <ellipse cx="14" cy="64" rx="26" ry="6" fill="rgba(180,220,255,0.2)"/>
+            <path d="M8 60 Q4 40 14 26 Q18 18 16 10 Q24 14 24 24 Q30 20 28 30 L30 34 Q26 40 28 50 L26 60 Z" fill="rgba(255,255,255,0.28)"/>
+            <circle cx="20" cy="16" r="2" fill="rgba(180,220,255,0.6)"/>
+            <path d="M28 32 q18 -4 34 6" stroke="rgba(180,220,255,0.45)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <path d="M30 36 q16 0 30 8" stroke="rgba(180,220,255,0.3)" stroke-width="2" fill="none" stroke-linecap="round"/>
+          </g>
+          <!-- Supertree Gardens -->
+          <g transform="translate(286,118)" stroke="rgba(120,200,150,0.5)" stroke-width="3" fill="none">
+            <line x1="10" y1="82" x2="10" y2="20"/>
+            <path d="M10 24 q-14 -8 -20 -2 M10 30 q14 -6 20 0 M10 38 q-12 -4 -18 2 M10 44 q12 -4 18 0"/>
+          </g>
+          <g transform="translate(320,128)" stroke="rgba(120,200,150,0.4)" stroke-width="2.5" fill="none">
+            <line x1="8" y1="72" x2="8" y2="16"/>
+            <path d="M8 20 q-10 -6 -15 -1 M8 26 q10 -5 15 0 M8 32 q-9 -3 -13 2"/>
+          </g>
+          <!-- ground -->
+          <rect x="0" y="198" width="360" height="2" fill="rgba(180,220,255,0.25)"/>
+        </svg>
+      </div>
+
+      <div class="cover-info">
+        <div class="cover-info-row">
+          <span class="ci-label">演出日期</span>
+          <span class="ci-val gold">2027 · 01 · 08（五）</span>
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-info-row">
+          <span class="ci-label">開演時間</span>
+          <span class="ci-val">20:00 開始</span>
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-info-row">
+          <span class="ci-label">演出地點</span>
+          <span class="ci-val">National Stadium 國家體育場</span>
+        </div>
+        <div class="cover-divider"></div>
+        <div class="cover-info-row">
+          <span class="ci-label">票價</span>
+          <span class="ci-val">SGD 318 / 人</span>
+        </div>
+      </div>
+
+      <div class="cover-cta">
+        <button class="cover-btn primary" onclick="switchPage('itinerary',document.querySelectorAll('.tab-item')[3])">看完整行程 →</button>
+        <button class="cover-btn ghost" onclick="switchPage('flight',document.querySelectorAll('.tab-item')[1])">航班資訊</button>
+      </div>
+      <div class="cover-hint">與你共譜屬於我們的「晴天 新加坡」回憶 🎤</div>
+    </div>
+  </div>
+
+  <!-- Page 1: 航班與出發前注意 -->
+  <div class="page" id="page-flight">
+    <div class="section-title">✈️ 航班資訊</div>
+
+    <div class="flight-card">
+      <div class="flight-header">
+        <div class="icon">✈️</div>
+        <div>
+          <h3>去程航班</h3>
+          <p>1 月 7 日（三）</p>
+        </div>
+      </div>
+      <div class="flight-route">
+        <div class="route-point">
+          <div class="code">TPE</div>
+          <div class="label">桃園</div>
+        </div>
+        <div class="route-arrow">
+          <div class="route-line"></div>
+          <div class="route-duration">約 4h45m</div>
+        </div>
+        <div class="route-point">
+          <div class="code">SIN</div>
+          <div class="label">樟宜</div>
+        </div>
+      </div>
+      <div class="info-rows">
+        <div class="info-row"><span class="key">起飛時間</span><span class="val">08:20 → 13:05</span></div>
+        <div class="info-row"><span class="key">抵達機場</span><span class="val">樟宜機場 Changi</span></div>
+        <div class="info-row"><span class="key">機場至市區</span><span class="val">MRT 東西線約 40 分鐘</span></div>
+      </div>
+    </div>
+
+    <div class="flight-card">
+      <div class="flight-header">
+        <div class="icon">🛬</div>
+        <div>
+          <h3>回程航班</h3>
+          <p>1 月 11 日（一）凌晨</p>
+        </div>
+      </div>
+      <div class="flight-route">
+        <div class="route-point">
+          <div class="code">SIN</div>
+          <div class="label">樟宜</div>
+        </div>
+        <div class="route-arrow">
+          <div class="route-line"></div>
+          <div class="route-duration">約 4h40m</div>
+        </div>
+        <div class="route-point">
+          <div class="code">TPE</div>
+          <div class="label">桃園</div>
+        </div>
+      </div>
+      <div class="info-rows">
+        <div class="info-row"><span class="key">起飛時間</span><span class="val">02:00 → 06:40</span></div>
+        <div class="info-row"><span class="key">建議抵達機場</span><span class="val">起飛前 3 小時（凌晨班機）</span></div>
+        <div class="info-row"><span class="key">注意</span><span class="val">1/10 晚需安排去機場交通</span></div>
+      </div>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-amber-bg)">🌙</div>
+        <h4>凌晨航班提醒</h4>
+      </div>
+      <ul class="notice-items">
+        <li>回程 1/11 02:00 起飛，等於 <span class="tag tag-red">1/10 深夜就要到機場</span></li>
+        <li>樟宜機場 24 小時營運，可提早去逛星耀樟宜 Jewel</li>
+        <li>飯店退房後行李可寄放，建議訂含 1/10 晚的住宿或考慮機場過夜</li>
+        <li>深夜往機場：MRT 約 23:30 收班，之後需搭 Grab（約 SGD 20–30）</li>
+      </ul>
+    </div>
+
+    <div class="section-title">🎒 出發前必做事項</div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-purple-bg)">🎤</div>
+        <h4>演唱會準備（最重要！）</h4>
+      </div>
+      <ul class="notice-items">
+        <li><span class="tag tag-purple">重要預約代號</span> 截圖保存 Ticketmaster SG 電子票券 / QR Code</li>
+        <li>確認入場規定：國家體育場禁帶專業相機、自拍棒</li>
+        <li>下載官方手環 App（如有燈光手環需綁定）</li>
+        <li>準備透明手提包（多數演唱會規定透明袋入場）</li>
+        <li>提早查好座位區與入口閘門號碼</li>
+      </ul>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-red-bg)">📋</div>
+        <h4>證件與入境</h4>
+      </div>
+      <ul class="notice-items">
+        <li>護照有效期需超過 6 個月 <span class="tag tag-red">必確認</span></li>
+        <li>台灣公民免簽證，可停留 30 天</li>
+        <li>入境前 3 天內線上填寫 <span class="tag tag-blue">SG Arrival Card</span>（必填免費）</li>
+        <li>準備回程機票證明、住宿訂房證明備查</li>
+      </ul>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-blue-bg)">📶</div>
+        <h4>通訊與交通卡</h4>
+      </div>
+      <ul class="notice-items">
+        <li>建議買新加坡 eSIM（Singtel / StarHub），出發前啟用</li>
+        <li>交通卡：直接用感應信用卡刷 MRT/公車（SimplyGo）最方便 <span class="tag tag-green">免買實體卡</span></li>
+        <li>下載 Grab App（東南亞版 Uber），綁定信用卡</li>
+        <li>下載 Google Maps 並離線下載新加坡地圖</li>
+      </ul>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-amber-bg)">💵</div>
+        <h4>金錢與換匯</h4>
+      </div>
+      <ul class="notice-items">
+        <li>新加坡幣（SGD）1 SGD ≈ TWD 24（匯率浮動，出發前查最新）</li>
+        <li>多數店家可刷卡、PayNow，但小販中心建議備現金</li>
+        <li>建議換 SGD 200–300 現金應急</li>
+        <li>信用卡選海外消費回饋高的卡種</li>
+      </ul>
+    </div>
+
+    <div class="notice-card">
+      <div class="notice-header">
+        <div class="notice-icon" style="background:var(--c-teal-bg)">🎫</div>
+        <h4>建議提前預訂</h4>
+      </div>
+      <ul class="notice-items">
+        <li>濱海灣花園 Cloud Forest / Flower Dome 線上購票 <span class="tag tag-red">需提前預約</span></li>
+        <li>環球影城 / 新加坡摩天觀景輪線上購票較便宜</li>
+        <li>金沙空中花園 SkyPark 觀景台門票</li>
+        <li>熱門餐廳（如珍寶海鮮）建議線上訂位</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Page 2: 行李清單 -->
+  <div class="page" id="page-packing">
+    <div class="section-title">✅ 行李清單</div>
+    <p style="font-size:13px; color:var(--c-text-hint); margin-bottom:16px;">點擊打勾，可點名稱文字直接編輯</p>
+
+    <div class="checklist-section">
+      <div class="checklist-title"><span class="checklist-icon">🎤</span>演唱會專屬</div>
+      <div id="checklist-concert"></div>
+      <div class="add-item-row">
+        <input class="add-input" placeholder="新增項目…" id="add-concert-input">
+        <button class="add-btn" onclick="addItem('concert','add-concert-input')">+</button>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <div class="checklist-title"><span class="checklist-icon">📄</span>證件 & 重要物品</div>
+      <div id="checklist-docs"></div>
+      <div class="add-item-row">
+        <input class="add-input" placeholder="新增項目…" id="add-docs-input">
+        <button class="add-btn" onclick="addItem('docs','add-docs-input')">+</button>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <div class="checklist-title"><span class="checklist-icon">👕</span>衣物 & 配件（熱帶氣候）</div>
+      <div id="checklist-clothes"></div>
+      <div class="add-item-row">
+        <input class="add-input" placeholder="新增項目…" id="add-clothes-input">
+        <button class="add-btn" onclick="addItem('clothes','add-clothes-input')">+</button>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <div class="checklist-title"><span class="checklist-icon">🔌</span>電子 & 科技</div>
+      <div id="checklist-tech"></div>
+      <div class="add-item-row">
+        <input class="add-input" placeholder="新增項目…" id="add-tech-input">
+        <button class="add-btn" onclick="addItem('tech','add-tech-input')">+</button>
+      </div>
+    </div>
+
+    <div class="checklist-section">
+      <div class="checklist-title"><span class="checklist-icon">💊</span>醫藥 & 個人衛生</div>
+      <div id="checklist-health"></div>
+      <div class="add-item-row">
+        <input class="add-input" placeholder="新增項目…" id="add-health-input">
+        <button class="add-btn" onclick="addItem('health','add-health-input')">+</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page 3: 每日行程 -->
+  <div class="page" id="page-itinerary">
+    <div class="section-title">🗓️ 五日行程總覽</div>
+
+    <!-- Day 1 -->
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-num">Day 1 · 1/7（三）</div>
+          <div class="day-title">抵達 × 濱海灣 × 金沙夜景</div>
+        </div>
+        <div class="day-cost">約 TWD 2,400</div>
+      </div>
+      <div class="timeline">
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">13:05</div><div class="t-icon transit">🚇</div></div>
+          <div class="t-content">
+            <div class="t-name">樟宜機場 → 市區飯店</div>
+            <div class="t-desc">入境後先逛星耀樟宜 Jewel 室內瀑布（HSBC Rain Vortex 世界最高室內瀑布），再搭 MRT 進市區放行李。</div>
+            <div class="t-tags"><span class="tag tag-blue">感應信用卡刷 MRT</span><span class="tag tag-teal">Jewel 免費參觀</span></div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Jewel+Changi+Airport" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">15:30</div><div class="t-icon food">🍜</div></div>
+          <div class="t-content">
+            <div class="t-name">午餐：天天海南雞飯（麥士威熟食中心）</div>
+            <div class="t-desc">米其林必比登推薦，新加坡國民美食代表，排隊也值得。嫩滑雞肉配香飯與辣椒醬。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食</span>
+              <span class="tag tag-red">必點菜單：海南雞飯</span>
+              <span class="tag tag-green">約 TWD 150/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Maxwell+Food+Centre+天天海南雞飯" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">17:30</div><div class="t-icon spot">🌳</div></div>
+          <div class="t-content">
+            <div class="t-name">濱海灣花園 Gardens by the Bay</div>
+            <div class="t-desc">超級樹（Supertree Grove）地標，雲霧林 Cloud Forest 室內瀑布，傍晚進場可一路待到晚上燈光秀。</div>
+            <div class="t-tags">
+              <span class="tag tag-red">需提前預約</span>
+              <span class="tag tag-blue">雙穹頂套票約 SGD 53</span>
+            </div>
+            <div class="t-desc" style="margin-top:4px">💡 攻略：戶外超級樹免費參觀，室內溫室才需門票。</div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Gardens+by+the+Bay" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">19:45</div><div class="t-icon spot">✨</div></div>
+          <div class="t-content">
+            <div class="t-name">花園狂想曲燈光秀 Garden Rhapsody</div>
+            <div class="t-desc">每晚 19:45 & 20:45 兩場，超級樹隨音樂律動的免費燈光秀，新加坡必看夜間體驗。</div>
+            <div class="t-tags"><span class="tag tag-amber">免費</span><span class="tag tag-teal">情侶必拍</span></div>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">21:00</div><div class="t-icon food">🦐</div></div>
+          <div class="t-content">
+            <div class="t-name">晚餐：濱海灣金沙 Rasapura Masters 美食廣場</div>
+            <div class="t-desc">金沙樓下平價美食街，叻沙、沙嗲、炒粿條都有，看完燈光秀順路解決晚餐。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：叻沙 Laksa</span>
+              <span class="tag tag-green">約 TWD 250–400/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Marina+Bay+Sands+Rasapura+Masters" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Day 2 - Concert Day -->
+    <div class="day-card">
+      <div class="day-header concert">
+        <div>
+          <div class="day-num">Day 2 · 1/8（五） · 🎤 演唱會日</div>
+          <div class="day-title">輕鬆漫遊 × 周杰倫晴天嘉年華</div>
+        </div>
+        <div class="day-cost">約 TWD 9,500</div>
+      </div>
+      <div class="timeline">
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">09:30</div><div class="t-icon food">🥐</div></div>
+          <div class="t-content">
+            <div class="t-name">早餐：亞坤 Ya Kun Kaya Toast</div>
+            <div class="t-desc">新加坡國民早餐，咖椰吐司 + 半熟蛋 + 南洋咖啡 Kopi，輕鬆開啟演唱會日。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必點菜單：咖椰吐司套餐</span>
+              <span class="tag tag-green">約 TWD 150/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Ya+Kun+Kaya+Toast+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">11:00</div><div class="t-icon spot">🦁</div></div>
+          <div class="t-content">
+            <div class="t-name">魚尾獅公園 Merlion Park</div>
+            <div class="t-desc">新加坡地標魚尾獅像，與金沙、濱海灣同框的經典打卡點。輕鬆散步、拍照，不耗體力。</div>
+            <div class="t-tags"><span class="tag tag-amber">免費</span><span class="tag tag-red">必拍地標</span></div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Merlion+Park+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">12:30</div><div class="t-icon food">🍤</div></div>
+          <div class="t-content">
+            <div class="t-name">午餐：老巴剎 Lau Pa Sat 沙嗲街</div>
+            <div class="t-desc">百年維多利亞式鐵棚熟食中心，距魚尾獅步行 10 分鐘。沙嗲烤肉串是招牌。吃飽好回飯店休息。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：沙嗲 Satay</span>
+              <span class="tag tag-green">約 TWD 300–450/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Lau+Pa+Sat" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">14:00</div><div class="t-icon hotel">😴</div></div>
+          <div class="t-content">
+            <div class="t-name">回飯店休息 × 養精蓄銳</div>
+            <div class="t-desc">下午回飯店補眠、洗澡、換上演唱會戰袍，把體力留給晚上的周董！記得再次確認電子票券。</div>
+            <div class="t-tags"><span class="tag tag-purple">演唱會前充電</span></div>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">17:30</div><div class="t-icon food">🍢</div></div>
+          <div class="t-content">
+            <div class="t-name">晚餐：體育場周邊 Kallang Wave Mall</div>
+            <div class="t-desc">國家體育場旁的購物中心，餐廳選擇多，提早吃飽以免演唱會中途餓肚子。建議簡單快速解決。</div>
+            <div class="t-tags">
+              <span class="tag tag-green">約 TWD 350–500/人</span>
+              <span class="tag tag-red">早點吃避開人潮</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Kallang+Wave+Mall" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">18:30</div><div class="t-icon star">🎤</div></div>
+          <div class="t-content">
+            <div class="t-name">周杰倫「晴天 新加坡 嘉年華Ⅱ」</div>
+            <div class="t-desc">提早 1.5 小時抵達國家體育場，找好閘門排隊入場、買周邊。20:00 正式開演！搭 MRT 環線/市區線至 Stadium 站直達。</div>
+            <div class="t-tags">
+              <span class="tag tag-purple">重要預約代號：電子票 QR Code</span>
+              <span class="tag tag-red">20:00 開演</span>
+              <span class="tag tag-amber">SGD 318/人</span>
+              <span class="tag tag-blue">MRT Stadium 站</span>
+            </div>
+            <div class="t-desc" style="margin-top:4px">🌤️ 新加坡站主題曲是〈晴天〉！主辦特別以「常有陣雨卻總迎來陽光」呼應新加坡氣候，記得期待這首壓軸。</div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Singapore+National+Stadium" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">23:00</div><div class="t-icon transit">🚇</div></div>
+          <div class="t-content">
+            <div class="t-name">散場 → 回飯店</div>
+            <div class="t-desc">散場人潮極多，MRT 會加開班次但仍擁擠。若太累可叫 Grab（散場加成約 SGD 25–40），兩人分攤約 TWD 300 內可接受。</div>
+            <div class="t-tags"><span class="tag tag-teal">Grab 兩人分攤划算</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Day 3 -->
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-num">Day 3 · 1/9（六）</div>
+          <div class="day-title">聖淘沙 × 環球影城</div>
+        </div>
+        <div class="day-cost">約 TWD 4,200</div>
+      </div>
+      <div class="timeline">
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">09:00</div><div class="t-icon food">☕</div></div>
+          <div class="t-content">
+            <div class="t-name">早餐：怡豐城 VivoCity 美食</div>
+            <div class="t-desc">前往聖淘沙必經的大型購物中心，先吃早午餐再搭聖淘沙捷運（Sentosa Express）上島。</div>
+            <div class="t-tags"><span class="tag tag-green">約 TWD 200–300/人</span></div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/VivoCity+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">10:30</div><div class="t-icon spot">🎢</div></div>
+          <div class="t-content">
+            <div class="t-name">新加坡環球影城 Universal Studios</div>
+            <div class="t-desc">變形金剛 3D、木乃伊復仇、科幻城市雙軌過山車。建議線上先買票走快速通道，熱門設施排隊較久。</div>
+            <div class="t-tags">
+              <span class="tag tag-red">需提前購票</span>
+              <span class="tag tag-blue">門票約 SGD 88/人</span>
+              <span class="tag tag-amber">必玩：變形金剛 3D</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Universal+Studios+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">13:00</div><div class="t-icon food">🍔</div></div>
+          <div class="t-content">
+            <div class="t-name">午餐：環球影城園內餐廳</div>
+            <div class="t-desc">園區內主題餐廳，雖然偏觀光價但很方便。或出園至 Malaysian Food Street 吃馬來風味。</div>
+            <div class="t-tags"><span class="tag tag-green">約 TWD 400–600/人</span></div>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">16:00</div><div class="t-icon spot">🏖️</div></div>
+          <div class="t-content">
+            <div class="t-name">聖淘沙海灘 × Skyline Luge</div>
+            <div class="t-desc">玩累了到 Palawan / Siloso 海灘散步吹海風，或體驗斜坡滑車 Skyline Luge 刺激又好玩。</div>
+            <div class="t-tags">
+              <span class="tag tag-teal">海灘免費</span>
+              <span class="tag tag-amber">Luge 約 SGD 28</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Siloso+Beach+Sentosa" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">19:00</div><div class="t-icon food">🦀</div></div>
+          <div class="t-content">
+            <div class="t-name">晚餐：珍寶海鮮 / 無招牌海鮮 辣椒螃蟹</div>
+            <div class="t-desc">新加坡必吃辣椒螃蟹（Chilli Crab），搭配炸饅頭沾醬汁。建議線上訂位。兩人分一隻螃蟹 + 配菜剛好。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：辣椒螃蟹</span>
+              <span class="tag tag-red">必點菜單：炸饅頭沾醬</span>
+              <span class="tag tag-green">兩人約 TWD 1,500（分攤）</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Jumbo+Seafood+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Day 4 -->
+    <div class="day-card">
+      <div class="day-header">
+        <div>
+          <div class="day-num">Day 4 · 1/10（日）</div>
+          <div class="day-title">文化巡禮 × 購物 × 深夜離境</div>
+        </div>
+        <div class="day-cost">約 TWD 3,000</div>
+      </div>
+      <div class="timeline">
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">09:30</div><div class="t-icon food">🍛</div></div>
+          <div class="t-content">
+            <div class="t-name">早餐：小印度 / 阿拉伯街早午餐</div>
+            <div class="t-desc">小印度（Little India）色彩繽紛街區，印度煎餅 Roti Prata 配咖哩，異國風味早餐。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：Roti Prata</span>
+              <span class="tag tag-green">約 TWD 150–250/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Little+India+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">11:00</div><div class="t-icon spot">🕌</div></div>
+          <div class="t-content">
+            <div class="t-name">甘榜格南 × 蘇丹回教堂 × 哈芝巷</div>
+            <div class="t-desc">蘇丹金頂回教堂莊嚴華麗，哈芝巷（Haji Lane）彩繪牆與文青小店密集，是 IG 拍照熱點。</div>
+            <div class="t-tags">
+              <span class="tag tag-teal">免費逛街拍照</span>
+              <span class="tag tag-red">必買伴手禮：手工香氛</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Haji+Lane+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">13:00</div><div class="t-icon food">🍜</div></div>
+          <div class="t-content">
+            <div class="t-name">午餐：牛車水 Chinatown 美食</div>
+            <div class="t-desc">牛車水熟食中心：了凡油雞飯（米其林）、麥奶蝦麵。可順道採買肉乾、伴手禮。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：了凡油雞飯</span>
+              <span class="tag tag-red">必買伴手禮：林志源肉乾</span>
+              <span class="tag tag-green">約 TWD 200–350/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Chinatown+Complex+Food+Centre" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">15:30</div><div class="t-icon spot">🛍️</div></div>
+          <div class="t-content">
+            <div class="t-name">烏節路 Orchard Road 購物</div>
+            <div class="t-desc">新加坡購物大街，ION Orchard、高島屋。可買伴手禮：美祿、肉骨茶包、TWG 茶、斑蘭蛋糕。</div>
+            <div class="t-tags">
+              <span class="tag tag-red">必買伴手禮：TWG 茶 / 肉骨茶包</span>
+              <span class="tag tag-amber">斑蘭蛋糕 Bengawan Solo</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/ION+Orchard+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">18:30</div><div class="t-icon food">🍲</div></div>
+          <div class="t-content">
+            <div class="t-name">晚餐：松發肉骨茶 / 黃亞細肉骨茶</div>
+            <div class="t-desc">最後一晚吃道地胡椒肉骨茶，暖胃又補體力，迎接深夜班機。可續湯免費。</div>
+            <div class="t-tags">
+              <span class="tag tag-amber">必吃美食：胡椒肉骨茶</span>
+              <span class="tag tag-green">約 TWD 350–500/人</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Song+Fa+Bak+Kut+Teh" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+        <div class="t-item">
+          <div class="t-left"><div class="t-time">22:30</div><div class="t-icon transit">🚖</div></div>
+          <div class="t-content">
+            <div class="t-name">前往樟宜機場（深夜）</div>
+            <div class="t-desc">1/11 02:00 班機，建議 22:30–23:00 出發。MRT 末班約 23:30，趕不上就搭 Grab（約 SGD 25–35，兩人分攤台幣 300 內可接受）。</div>
+            <div class="t-tags">
+              <span class="tag tag-red">務必預留時間</span>
+              <span class="tag tag-teal">深夜建議 Grab</span>
+            </div>
+            <a class="nav-btn" href="https://www.google.com/maps/search/Changi+Airport+Singapore" target="_blank">
+              <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>導航
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- 行程尾聲提醒 -->
+    <div style="background:var(--c-red-bg);border:0.5px solid var(--c-border);border-radius:var(--radius-lg);padding:16px;margin-bottom:16px;">
+      <div style="font-size:13px;font-weight:600;color:var(--c-red);margin-bottom:8px;">✈️ Day 5（1/11 凌晨）返台</div>
+      <ul style="list-style:none;display:flex;flex-direction:column;gap:6px;">
+        <li style="font-size:13px;color:var(--c-text-sub);padding-left:14px;position:relative"><span style="position:absolute;left:2px">·</span>02:00 班機起飛，06:40 抵達桃園，當天可正常上班/休息</li>
+        <li style="font-size:13px;color:var(--c-text-sub);padding-left:14px;position:relative"><span style="position:absolute;left:2px">·</span>樟宜機場退稅（GST）：購物滿 SGD 100 可在機場辦理電子退稅</li>
+        <li style="font-size:13px;color:var(--c-text-sub);padding-left:14px;position:relative"><span style="position:absolute;left:2px">·</span><span class="tag tag-red">必確認</span> 液體（伴手禮醬料）超過 100ml 須托運</li>
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- Page 4: 探店清單 -->
+  <div class="page" id="page-food">
+    <div class="section-title">☕ 新加坡探店口袋名單</div>
+    <div class="food-filter" id="food-filter">
+      <button class="filter-btn active" onclick="filterFood('all',this)">全部</button>
+      <button class="filter-btn" onclick="filterFood('local',this)">在地美食</button>
+      <button class="filter-btn" onclick="filterFood('cafe',this)">咖啡廳</button>
+      <button class="filter-btn" onclick="filterFood('seafood',this)">海鮮</button>
+      <button class="filter-btn" onclick="filterFood('sweets',this)">甜點</button>
+      <button class="filter-btn" onclick="filterFood('hawker',this)">小販中心</button>
+    </div>
+    <div id="food-list"></div>
+  </div>
+
+  <!-- Page 5: 提示 & 預算 -->
+  <div class="page" id="page-tips">
+    <div class="section-title">💡 旅遊實用提示</div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="tip-icon">🚇</div>
+        <h4>交通</h4>
+        <p>直接刷感應信用卡進出 MRT，免買實體卡</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🚖</div>
+        <h4>叫車</h4>
+        <p>Grab 是當地 Uber，深夜或趕時間很實用</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🌡️</div>
+        <h4>天氣</h4>
+        <p>全年濕熱約 26–32°C，午後常陣雨，帶傘</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">💧</div>
+        <h4>飲水</h4>
+        <p>自來水可生飲，帶水壺隨時補水防中暑</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🚭</div>
+        <h4>法規</h4>
+        <p>嚴禁亂丟垃圾、口香糖、地鐵飲食，罰很重</p>
+      </div>
+      <div class="tip-card">
+        <div class="tip-icon">🔌</div>
+        <h4>插座</h4>
+        <p>英規三孔插座（G型），需帶轉接頭</p>
+      </div>
+    </div>
+
+    <div class="section-title">🗣️ 常用語速查</div>
+
+    <div class="phrase-card">
+      <div><div class="jp">Can I have the bill?</div><div class="rom">買單 / 結帳</div></div>
+      <div class="tw">在地也常說 "checkout"</div>
+    </div>
+    <div class="phrase-card">
+      <div><div class="jp">Kopi / Teh</div><div class="rom">咖啡 / 奶茶（南洋）</div></div>
+      <div class="tw">Kopi O = 黑咖啡無奶</div>
+    </div>
+    <div class="phrase-card">
+      <div><div class="jp">Da bao</div><div class="rom">打包 / 外帶</div></div>
+      <div class="tw">小販中心常用</div>
+    </div>
+    <div class="phrase-card">
+      <div><div class="jp">Chope</div><div class="rom">用面紙占位</div></div>
+      <div class="tw">新加坡獨特占座文化</div>
+    </div>
+    <div class="phrase-card">
+      <div><div class="jp">Shiok!</div><div class="rom">爽！好讚！</div></div>
+      <div class="tw">在地讚嘆用語</div>
+    </div>
+
+    <div class="section-title">💰 五日預算總覽</div>
+
+    <div class="total-card">
+      <div class="total-label">兩人預估總花費（不含機票）</div>
+      <div class="total-num">TWD 56,000</div>
+      <div class="total-sub">每人約 TWD 28,000 · 含演唱會票 5天4夜</div>
+    </div>
+
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">🎤 演唱會門票（2人）</span><span class="budget-val">TWD 15,300</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:27%;background:var(--c-purple)"></div></div>
+    </div>
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">住宿（4晚）</span><span class="budget-val">TWD 14,000</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:25%;background:var(--c-blue)"></div></div>
+    </div>
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">餐費（三餐×5天×2人）</span><span class="budget-val">TWD 11,000</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:20%;background:var(--c-amber)"></div></div>
+    </div>
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">景點門票（環球影城等）</span><span class="budget-val">TWD 8,000</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:14%;background:var(--c-teal)"></div></div>
+    </div>
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">交通（MRT + Grab）</span><span class="budget-val">TWD 3,200</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:6%;background:var(--c-green)"></div></div>
+    </div>
+    <div class="budget-bar">
+      <div class="budget-row"><span class="budget-label">購物 & 伴手禮</span><span class="budget-val">TWD 4,500</span></div>
+      <div class="budget-track"><div class="budget-fill" style="width:8%;background:var(--c-coral)"></div></div>
+    </div>
+
+    <p style="font-size:11px;color:var(--c-text-hint);margin-top:8px;line-height:1.6;">※ 匯率以 1 SGD ≈ TWD 24 估算，實際依當下匯率與消費習慣浮動。住宿為中等價位雙人房估值。</p>
+  </div>
+
+</div>
+
+<!-- Bottom Tab Bar -->
+<nav class="tab-bar" role="navigation" aria-label="主導航">
+  <button class="tab-item active" onclick="switchPage('cover',this)" aria-label="封面">
+    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    封面
+  </button>
+  <button class="tab-item" onclick="switchPage('flight',this)" aria-label="航班資訊">
+    <svg viewBox="0 0 24 24"><path d="M21 3L3 10.53v.98l6.84 2.65L12.48 21h.98L21 3z"/></svg>
+    航班
+  </button>
+  <button class="tab-item" onclick="switchPage('packing',this)" aria-label="行李清單">
+    <svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+    行李
+  </button>
+  <button class="tab-item" onclick="switchPage('itinerary',this)" aria-label="每日行程">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    行程
+  </button>
+  <button class="tab-item" onclick="switchPage('food',this)" aria-label="探店清單">
+    <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+    探店
+  </button>
+  <button class="tab-item" onclick="switchPage('tips',this)" aria-label="旅遊提示">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    提示
+  </button>
+</nav>
+
+<script>
+const foodData = [
+  { cat:'local', emoji:'🍗', name:'天天海南雞飯', area:'麥士威熟食中心', price:'TWD 150', note:'米其林必比登推薦，新加坡國民美食代表，雞肉嫩滑、油飯香' },
+  { cat:'local', emoji:'🍢', name:'老巴剎沙嗲街', area:'Lau Pa Sat', price:'TWD 300–450', note:'百年鐵棚熟食中心，晚間沙嗲街擺攤，烤肉串配花生醬必點' },
+  { cat:'local', emoji:'🍜', name:'了凡香港油雞飯麵', area:'牛車水', price:'TWD 200', note:'全球最便宜米其林一星之一，油雞滑嫩、價格親民' },
+  { cat:'local', emoji:'🍲', name:'松發肉骨茶', area:'克拉碼頭', price:'TWD 350–500', note:'胡椒味肉骨茶代表，湯頭可免費續，配油條與白飯' },
+  { cat:'local', emoji:'🍛', name:'結霜橋叻沙 / 328 加東叻沙', area:'加東 Katong', price:'TWD 200–300', note:'濃郁椰漿咖哩湯麵，加東叻沙是當地經典版本' },
+  { cat:'seafood', emoji:'🦀', name:'珍寶海鮮 Jumbo', area:'克拉碼頭/濱海', price:'兩人 TWD 1,500', note:'辣椒螃蟹名店，必配炸饅頭沾醬，建議線上訂位' },
+  { cat:'seafood', emoji:'🦞', name:'無招牌海鮮', area:'多分店', price:'兩人 TWD 1,400', note:'白胡椒螃蟹聞名，當地人也愛，份量足適合分食' },
+  { cat:'cafe', emoji:'🍞', name:'亞坤 Ya Kun Kaya Toast', area:'多分店', price:'TWD 150', note:'國民早餐連鎖，咖椰吐司+半熟蛋+南洋咖啡 Kopi 經典組合' },
+  { cat:'cafe', emoji:'☕', name:'Tiong Bahru Bakery', area:'中峇魯', price:'TWD 250–400', note:'文青老街區人氣麵包店，可頌酥脆，環境舒適好拍' },
+  { cat:'cafe', emoji:'🫖', name:'PS.Cafe', area:'Dempsey Hill', price:'TWD 400–600', note:'綠意環繞的網美咖啡廳，松露薯條與brunch人氣高' },
+  { cat:'cafe', emoji:'🧋', name:'亞坤對手 喜園咖啡', area:'多分店', price:'TWD 120–200', note:'另一咖椰吐司名店，烤吐司更厚、咖椰醬偏甜，值得比較' },
+  { cat:'sweets', emoji:'🍧', name:'Mr Coconut 椰子冰', area:'多分店', price:'TWD 100–150', note:'熱帶椰子冰沙，消暑首選，新鮮椰肉口感' },
+  { cat:'sweets', emoji:'🍮', name:'斑蘭蛋糕 Bengawan Solo', area:'機場/商場', price:'TWD 150–250', note:'伴手禮首選，斑蘭（pandan）香氣濃，機場也買得到' },
+  { cat:'sweets', emoji:'🍦', name:'傳統麵包冰淇淋', area:'烏節路街邊', price:'TWD 50', note:'街邊推車冰淇淋夾彩色吐司，懷舊又便宜的在地點心' },
+  { cat:'hawker', emoji:'🍤', name:'麥士威熟食中心', area:'牛車水旁', price:'TWD 150–300', note:'天天海南雞飯所在地，必比登小販集中，平價又道地' },
+  { cat:'hawker', emoji:'🍳', name:'紐頓熟食中心 Newton', area:'紐頓站', price:'TWD 300–500', note:'電影《瘋狂亞洲富豪》拍攝地，烤魟魚、蝦麵、炒粿條人氣旺' },
+  { cat:'hawker', emoji:'🥘', name:'老地方熟食中心 Old Airport Road', area:'巴耶利峇', price:'TWD 150–300', note:'本地人最愛的隱藏熟食中心，蠔煎、福建蝦麵超道地' },
+  { cat:'hawker', emoji:'🍢', name:'紐頓 vs 牛車水比較', area:'—', price:'—', note:'觀光首選紐頓、平價道地選牛車水或老地方，各有特色' },
+];
+
+function renderFood(cat) {
+  const list = document.getElementById('food-list');
+  const filtered = cat === 'all' ? foodData : foodData.filter(f => f.cat === cat);
+  list.innerHTML = filtered.map(f => `
+    <div class="food-item" data-cat="${f.cat}">
+      <div class="food-emoji">${f.emoji}</div>
+      <div class="food-info">
+        <div class="food-name">${f.name}</div>
+        <div class="food-meta">
+          <span class="food-price">${f.price}</span>
+          <span class="food-area">📍 ${f.area}</span>
+        </div>
+        <div class="food-note">${f.note}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterFood(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderFood(cat);
+}
+
+renderFood('all');
+
+function switchPage(id, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const topNav = document.getElementById('top-nav');
+  if (id === 'cover') { topNav.classList.add('hidden'); }
+  else { topNav.classList.remove('hidden'); }
+  window.scrollTo(0, 0);
+}
+// start on cover - hide top nav
+document.getElementById('top-nav').classList.add('hidden');
+
+const checklistData = {
+  concert: [
+    '電子票券 QR Code 截圖','透明手提包（演唱會規定）','行動電源（演唱會錄影耗電）','輕便雨衣（戶外場地防雨）','應援物 / 螢光棒','舒適好走的鞋'
+  ],
+  docs: [
+    '護照（效期 > 6 個月）','機票電子票證','SG Arrival Card 完成截圖','住宿訂房證明','新加坡幣現金','信用卡（海外回饋卡）'
+  ],
+  clothes: [
+    '透氣輕薄衣物 × 5','短褲 / 洋裝','防曬外套 / 薄外套（室內冷氣強）','泳裝（聖淘沙/飯店泳池）','折疊傘 / 雨衣','太陽眼鏡 + 帽子','舒適涼鞋 + 球鞋'
+  ],
+  tech: [
+    'eSIM 或漫遊開通','英規 G 型插座轉接頭','手機充電線','行動電源','相機','藍牙耳機'
+  ],
+  health: [
+    '個人常備藥','防曬乳 SPF50+','防蚊液','保濕噴霧','個人洗漱用品','OK 繃（走路多）'
+  ]
+};
+
+const checkState = {};
+
+function renderChecklist(cat) {
+  const container = document.getElementById('checklist-' + cat);
+  checkState[cat] = checkState[cat] || checklistData[cat].map(() => false);
+  container.innerHTML = checklistData[cat].map((item, i) => `
+    <div class="check-item ${checkState[cat][i] ? 'done' : ''}" onclick="toggleCheck('${cat}',${i})">
+      <div class="check-box ${checkState[cat][i] ? 'checked' : ''}"></div>
+      <span class="check-label" contenteditable="true" onclick="event.stopPropagation()" onblur="updateLabel('${cat}',${i},this)">${item}</span>
+    </div>
+  `).join('');
+}
+
+function toggleCheck(cat, i) {
+  checkState[cat][i] = !checkState[cat][i];
+  renderChecklist(cat);
+}
+
+function updateLabel(cat, i, el) {
+  checklistData[cat][i] = el.innerText.trim();
+}
+
+function addItem(cat, inputId) {
+  const input = document.getElementById(inputId);
+  const val = input.value.trim();
+  if (!val) return;
+  checklistData[cat].push(val);
+  checkState[cat] = checkState[cat] || [];
+  checkState[cat].push(false);
+  input.value = '';
+  renderChecklist(cat);
+}
+
+['concert','docs','clothes','tech','health'].forEach(renderChecklist);
+</script>
+</body>
+</html>
